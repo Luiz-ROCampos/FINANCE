@@ -1,11 +1,27 @@
 from django.shortcuts import render, redirect
-from .models import Conta
+from .models import Conta, Categoria
+from django.contrib import messages
+from django.contrib.messages import constants
+from .utils import calcula_total
 
 def home(request):
-    return render(request, 'home.html')
+    contas = Conta.objects.all()
+    
+    saldo_total = calcula_total(contas, 'valor')
+    
+    '''
+    total_contas = contas.aggregate(Sum('valor'))
+    saldo_total = calcula_total(contas, 'valor')
+    '''
+    
+    return render(request, 'home.html', {'contas': contas, 'saldo_total': saldo_total,})
 
 def gerenciar(request):
-    return render(request, 'gerenciar.html')
+    contas = Conta.objects.all()
+    categorias = Categoria.objects.all()
+    total_contas = calcula_total(contas, 'valor')
+    
+    return render(request, 'gerenciar.html', {'contas': contas, 'total_contas': total_contas, 'banco_choices': Conta.banco_choices, 'tipo_choices': Conta.tipo_choices, 'categorias': categorias })
 
 def cadastrar_banco(request):
     apelido = request.POST.get('apelido')
@@ -14,7 +30,8 @@ def cadastrar_banco(request):
     valor = request.POST.get('valor')
     icone = request.FILES.get('icone')
     
-    if len(apelido.strip()) == 0 or len(valor.strip()) == 0:
+    if (len(apelido.strip()) == 0 or len(valor.strip()) == 0) or icone is None:
+        messages.add_message(request, constants.ERROR, 'Preencha todos os campos')
         return redirect('/perfil/gerenciar/')
     
     conta = Conta(
@@ -26,5 +43,38 @@ def cadastrar_banco(request):
     )
 
     conta.save()
-
+    messages.add_message(request, constants.SUCCESS, 'Conta cadastrada com sucesso')
     return redirect('/perfil/gerenciar/')
+
+def deletar_banco(request, id):
+    conta = Conta.objects.get(id=id)
+    conta.delete()
+    messages.add_message(request, constants.SUCCESS, 'Conta deletada com sucesso')
+    return redirect('/perfil/gerenciar/')
+
+def cadastrar_categoria(request):
+    nome = request.POST.get('categoria')
+    essencial = bool(request.POST.get('essencial'))
+
+    if len(nome.strip()) == 0 or essencial is None:
+        messages.add_message(request, constants.ERROR, 'Preencha todos os campos')
+        return redirect('/perfil/gerenciar/')
+    
+    categoria = Categoria(
+        categoria=nome,
+        essencial=essencial
+    )
+
+    categoria.save()
+    messages.add_message(request, constants.SUCCESS, 'Categoria cadastrada com sucesso')
+    return redirect('/perfil/gerenciar/')
+
+def update_categoria(request, id):
+    categoria = Categoria.objects.get(id=id)
+    categoria.essencial = not categoria.essencial
+    categoria.save()
+    return redirect('/perfil/gerenciar/')
+
+
+
+
