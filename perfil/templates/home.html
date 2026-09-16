@@ -1,7 +1,9 @@
 {% extends 'bases/base.html' %}
 {% load static %}
-{% block 'head'%}
+{% block 'head' %}
+
     <link href="{% static 'perfil/css/home.css' %}" rel="stylesheet">
+
 {% endblock %}
 
 {% block 'title' %}Home{% endblock %}
@@ -34,7 +36,7 @@
                                 <span  class="fonte-destaque">RS 1.000,00</span>
                             </div>
                             <div class="col-md">
-                                <img class="icone-setas" src="{% static 'perfil/img/saidas.png' %}">
+                                <img class="icone-setas" src="{% static 'perfil/img/saidas.png' %}">    
                             </div>
                         </div> 
                     </div>
@@ -56,18 +58,17 @@
                     <hr class="hr-borda">
                     <span class="fonte-destaque">Suas contas</span>
 
-                    {% for conta in contas %}
-                        <div class="div-contas">
-                            
-                                <div class="lista-conta">
-                                    <span>{{ conta.apelido }}</span>
-                                    <span class="total-conta">R$ {{ conta.valor|floatformat:2 }}</span>
-                                </div>
-                                <br>
-                    {% endfor %}        
-                            
-                            
-                        </div>
+                    <div class="div-contas">
+                        {% for conta in contas %}
+                            <div class="lista-conta">
+                                <span>{{ conta.apelido }}</span>
+                                <span class="total-conta">R$ {{ conta.valor|floatformat:2 }}</span>
+                            </div>
+                            <br>
+                        {% endfor %}
+                        
+                        
+                    </div>
                     <hr class="hr-borda">
                     <a href="{% url 'gerenciar' %}" class="botao-principal">Gerenciar contas</a>
                 </div>
