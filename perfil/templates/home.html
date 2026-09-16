@@ -82,7 +82,7 @@
                             <div class="saldo">
                                 <span class="fonte-destaque">Saldo mensal</span>
                                 <br>
-                                <span class="font-light">R$ 0.000,00</span>
+                                <span class="font-light">R$ {{ saldo_total|floatformat:2 }}</span>
                             </div>
                         </div>
                         <div class="col-md">
@@ -99,7 +99,7 @@
                     <span class="fonte-destaque">Total livre</span>
                     <span class="font-light negativo">R$ 0.000,00</span>
                     <hr class="hr-borda">
-                    <a href="#" class="botao-principal">Gerenciar dados mensais</a>
+                    <a href="{% url 'novo_valor' %}" class="botao-principal">Gerenciar dados mensais</a>
                 </div>
             </div>
 
