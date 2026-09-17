@@ -1,9 +1,15 @@
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.messages import constants
 from perfil.models import Conta, Categoria
 from .models import Valores
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.template.loader import render_to_string
+import os
+from django.conf import settings
+from weasyprint import HTML
+from io import BytesIO
 
 # Create your views here.
 def novo_valor(request):
@@ -50,6 +56,7 @@ def view_extrato(request):
     
     conta_get = request.GET.get('conta')
     categoria_get = request.GET.get('categoria')
+    periodo_get = request.GET.get('periodo')
     
     valores = Valores.objects.filter(data__month=datetime.now().month)
 
@@ -57,12 +64,23 @@ def view_extrato(request):
         valores = valores.filter(conta__id=conta_get)
     if categoria_get:
         valores = valores.filter(categoria__id=categoria_get)
-
-    #TODO: BOTÃO PARA ZERAR OS FILTROS
-    #TODO: FILTRAR POR PERIODO
+    '''TODO: FILTRAR POR PERIODO'''
+    if periodo_get:
+        valores = valores.filter(data__gte=datetime.now() - timedelta(days=int(periodo_get)))
+    '''#TODO: BOTÃO PARA ZERAR OS FILTROS'''
+    
        
  
 
     return render(request, 'view_extrato.html', {'valores': valores, 'contas': contas, 'categorias': categorias})
 
+def exportar_pdf(request):
+    valores = Valores.objects.filter(data__month=datetime.now().month)
+    
+    path_template = os.path.join(settings.BASE_DIR, 'templates/partials/extrato.html')
+    template_render = render_to_string(path_template, {'valores': valores})
+    path_output = BytesIO()
+    HTML(string=template_render).write_pdf(path_output)
+    path_output.seek(0)
+    return FileResponse(path_output, filename='extrato.pdf')
 
