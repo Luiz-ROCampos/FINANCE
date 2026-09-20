@@ -20,7 +20,7 @@
                 {% endfor %}
             {% endif %}
             <div class="col-md-5">
-                <p class="fonte-destaque">Suas contas</p>
+                <p class="fonte-destaque">Suas Contas</p>
                 <hr>
                 
                 <div class="contas">
@@ -44,7 +44,7 @@
             <div class="col-md-2"></div>
 
             <div class="col-md-5">
-                <p class="fonte-destaque">Nova conta</p>
+                <p class="fonte-destaque">Nova Conta</p>
                 
                 <form action="{% url 'cadastrar_banco' %}" method="POST" enctype='multipart/form-data'>{% csrf_token %}
                     <label>Apelido</label>

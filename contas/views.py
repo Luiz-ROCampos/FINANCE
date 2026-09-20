@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from perfil.models import Categoria
+from perfil.models import Categoria, Conta  
 from .models import ContaPagar, ContaPaga
+from extrato.models import Valores
 from django.contrib.messages import constants
 from django.contrib import messages
 from datetime import datetime
@@ -10,7 +11,8 @@ from datetime import datetime
 def definir_contas(request):
     if request.method == 'GET':
         categorias = Categoria.objects.all()
-        return render(request, 'definir_contas.html', {'categorias': categorias})
+        
+        return render(request, 'definir_contas.html', {'categorias': categorias, 'banco_choices': Conta.banco_choices})
     elif request.method == 'POST':
         titulo = request.POST.get('titulo')
         categoria = request.POST.get('categoria')
@@ -49,7 +51,15 @@ def ver_contas(request):
                                                'contas_proximas_vencimento': contas_proximas_vencimento, 
                                                'restantes': restantes})
     
+def pagar_conta(request, id):
+    conta_pagar = ContaPagar.objects.get(id=id)
+    conta_paga = ContaPaga(
+        conta = conta_pagar,
+        data_pagamento = datetime.now()
+    )
+    conta_paga.save()
     
+    return redirect('/contas/ver_contas/') 
     
     
     

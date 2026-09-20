@@ -30,6 +30,9 @@
             <div class="col-md-8">
                 <p class="fonte-destaque" style="color: red;">Contas vencidas</p>
                 <div class="card">
+                    {% if not contas_vencidas %}
+                        <p class="fonte-destaque">Nenhuma conta vencida.</p>
+                    {% else %}
                         {% for conta in contas_vencidas %}
                             <div class="linha-conta">
                                 <div class="row">
@@ -40,18 +43,21 @@
                                         Dia {{ conta.dia_pagamento }}
                                     </div>
                                     <div class="col-md text-center">
-                                        <a href="#" class="botao-principal">PAGAR</a>
+                                        <a href="/contas/pagar_conta/{{ conta.id }}/" class="botao-principal">PAGAR</a>
                                     </div> 
                                 </div>
                             </div>
                             <br>
                         {% endfor %}
+                    {% endif %}
                 </div>
                 <br>
                 <br>
                 <p class="fonte-destaque" style="color: #E96363;">Contas próximas do vencimento</p>
                 <div class="card">
-                    
+                    {% if not contas_proximo_vencimento %}
+                        <p class="fonte-destaque">Nenhuma conta próxima do vencimento.</p>
+                    {% else %}
                         {% for conta in contas_proximas_vencimento %}
                             <div class="linha-conta">
                                 <div class="row">
@@ -62,13 +68,13 @@
                                         Dia: {{ conta.dia_pagamento }}
                                     </div>
                                     <div class="col-md text-center">
-                                        <a href="#" class="botao-principal">PAGAR</a>
+                                        <a href="/contas/pagar_conta/{{ conta.id }}/" class="botao-principal">PAGAR</a>
                                     </div> 
                                 </div>
                             </div>
                             <br>
                         {% endfor %}
-                        
+                    {% endif %}   
                     
                 </div>
                 <br>
@@ -88,7 +94,7 @@
                                         Dia: {{ conta.dia_pagamento }}
                                     </div>
                                     <div class="col-md text-center">
-                                        <a href="#" class="botao-principal">PAGAR</a>
+                                        <a href="/contas/pagar_conta/ {{ conta.id }}" class="botao-principal">PAGAR</a>
                                     </div> 
                                 </div>
                             </div>
