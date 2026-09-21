@@ -1,16 +1,10 @@
-"""
-WSGI config for core project.
+import os, sys
 
-It exposes the WSGI callable as a module-level variable named ``application``.
+path = "/home/LuizRicardo88/FINANCE"
+if path not in sys.path:
+    sys.path.append(path)
 
-For more information on this file, see
-https://docs.djangoproject.com/en/6.1/howto/deployment/wsgi/
-"""
-
-import os
+os.environ["DJANGO_SETTINGS_MODULE"] = "core.settings"
 
 from django.core.wsgi import get_wsgi_application
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
-
 application = get_wsgi_application()
